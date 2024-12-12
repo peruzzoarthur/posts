@@ -1,6 +1,6 @@
 ### React Chromajs Select Menu
 
-This is a React Typescript project [setup with Vite with shadcn/ui.](https://ui.shadcn.com/docs/installation/vite)
+This is a React Typescript project [setup with Vite & shadcn/ui.](https://ui.shadcn.com/docs/installation/vite)
 
 
 Install dependencies:
