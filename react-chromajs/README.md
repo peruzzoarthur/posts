@@ -1,6 +1,7 @@
-#### React Chromajs Select Menu
+### React Chromajs Select Menu
 
-This is a React Vite Typescript project with shadcn/ui. [Setup instructions](https://ui.shadcn.com/docs/installation/vite)
+This is a React Typescript project [setup with Vite with shadcn/ui.](https://ui.shadcn.com/docs/installation/vite)
+
 
 Install dependencies:
 
@@ -9,13 +10,13 @@ npm install chroma-js
 npm install -D @types/chroma-js
 ```
 
-Install shadcn components
+Install shadcn/ui components
 
 ```bash
 npx shadcn@latest add badge button card select
 ```
 
-Chromajs and brewer function
+#### Chromajs and brewer function
 
 Define type for brewer palettes
 
@@ -23,7 +24,7 @@ Define type for brewer palettes
 export type BrewerPalette = keyof typeof brewer;
 ```
 
-Create the Select Menu at src/components/ChromaSelectMenu.tsx
+Create a select menu at src/components/ChromaSelectMenu.tsx
 
 ```typescript
 import { brewer } from "chroma-js";
@@ -68,7 +69,7 @@ export const ChromaSelectMenu = ({
 
 ```
 
-Create ColorBar at src/components/ChromaPaletteBar.tsx
+Create colors bar at src/components/ChromaPaletteBar.tsx
 
 ```typescript
 import { brewer } from "chroma-js";
@@ -94,7 +95,7 @@ export const ChromaPaletteBar = ({ brewerPalette }: ChromaPaletteBarProps) => {
 };
 ```
 
-Create the card at src/components
+Create the card component at src/components/ChromaCard.tsx
 
 ```typescript
 import { brewer } from "chroma-js";
