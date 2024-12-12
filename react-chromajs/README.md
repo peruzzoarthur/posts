@@ -1,50 +1,154 @@
-# React + TypeScript + Vite
+---
+type: StudyNote
+title: React chromajs select menu
+tags: []
+dataUpdated: null
+coverImage: null
+---
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a React Vite Typescript project with shadcn/ui.
 
-Currently, two official plugins are available:
+[Vite](https://ui.shadcn.com/docs/installation/vite)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Install dependencies:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm install chroma-js
+npm install -D @types/chroma-js
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Install shadcn components
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+npx shadcn@latest add badge button card select
 ```
+
+Chromajs and brewer function
+
+Define type for brewer palettes
+
+```typescript
+export type BrewerPalette = keyof typeof brewer;
+```
+
+Create the Select Menu at src/components/ChromaSelectMenu.tsx
+
+```typescript
+import { brewer } from "chroma-js";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { BrewerPalette } from "./ChromaCard";
+
+type ChromaSelectMenuProps = {
+  brewerPalette: BrewerPalette | undefined;
+  setBrewerPalette: React.Dispatch<
+    React.SetStateAction<BrewerPalette | undefined>
+  >;
+};
+
+export const ChromaSelectMenu = ({
+  brewerPalette,
+  setBrewerPalette,
+}: ChromaSelectMenuProps) => {
+  return (
+    <Select
+      defaultValue={brewerPalette}
+      onValueChange={(value) => setBrewerPalette(value as BrewerPalette)}
+    >
+      <SelectTrigger className="w-auto">
+        <SelectValue placeholder={brewerPalette || "Select palette"} />
+      </SelectTrigger>
+      <SelectContent>
+        {Object.keys(brewer).map((palette) => (
+          <SelectItem key={palette} value={palette}>
+            {palette}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+};
+
+```
+
+Create ColorBar at src/components/ChromaPaletteBar.tsx
+
+```typescript
+import { brewer } from "chroma-js";
+import { Badge } from "./ui/badge";
+import { BrewerPalette } from "./ChromaCard";
+
+type ChromaPaletteBarProps = {
+  brewerPalette: BrewerPalette;
+};
+
+export const ChromaPaletteBar = ({ brewerPalette }: ChromaPaletteBarProps) => {
+  return (
+    <div className="flex justify-center items-center w-full">
+      {brewer[brewerPalette].map((color, index) => (
+        <Badge
+          key={index}
+          style={{ backgroundColor: color }}
+          className="h-10 w-10 border-none rounded-none"
+        />
+      ))}
+    </div>
+  );
+};
+```
+
+
+
+Create the card at src/components
+
+```typescript
+import { brewer } from "chroma-js";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardTitle,
+} from "./ui/card";
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { ChromaSelectMenu } from "./ChromaSelectMenu";
+import { ChromaPaletteBar } from "./ChromaPaletteBar";
+
+export type BrewerPalette = keyof typeof brewer;
+
+export const ChromaCard = () => {
+  const [brewerPalette, setBrewerPalette] = useState<BrewerPalette | undefined>(
+    undefined,
+  );
+
+  return (
+    <Card className="w-[50vh] h-auto p-10 space-y-5">
+      <CardTitle>Color palette picker</CardTitle>
+      <CardDescription>
+        Select menu for chroma-js color palettes
+      </CardDescription>
+      <CardContent className="space-y-2">
+        <ChromaSelectMenu
+          brewerPalette={brewerPalette}
+          setBrewerPalette={setBrewerPalette}
+        />
+        {brewerPalette && <ChromaPaletteBar brewerPalette={brewerPalette} />}
+      </CardContent>
+      <CardFooter>
+        <Button>Apply</Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
+```
+
+Use case - ColdMapViewer
+
+
