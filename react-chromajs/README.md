@@ -1,14 +1,6 @@
----
-type: StudyNote
-title: React chromajs select menu
-tags: []
-dataUpdated: null
-coverImage: null
----
+#### React Chromajs Select Menu
 
-This is a React Vite Typescript project with shadcn/ui.
-
-[Vite](https://ui.shadcn.com/docs/installation/vite)
+This is a React Vite Typescript project with shadcn/ui. [Setup instructions](https://ui.shadcn.com/docs/installation/vite)
 
 Install dependencies:
 
@@ -102,8 +94,6 @@ export const ChromaPaletteBar = ({ brewerPalette }: ChromaPaletteBarProps) => {
 };
 ```
 
-
-
 Create the card at src/components
 
 ```typescript
@@ -150,5 +140,3 @@ export const ChromaCard = () => {
 ```
 
 Use case - ColdMapViewer
-
-
