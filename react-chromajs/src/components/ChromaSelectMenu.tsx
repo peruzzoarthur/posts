@@ -6,12 +6,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { BrewerPalette } from "./ChromaCard";
+import { BrewerPaletteKey } from "./ChromaCard";
 
 type ChromaSelectMenuProps = {
-  brewerPalette: BrewerPalette | undefined;
+  brewerPalette: BrewerPaletteKey | undefined;
   setBrewerPalette: React.Dispatch<
-    React.SetStateAction<BrewerPalette | undefined>
+    React.SetStateAction<BrewerPaletteKey | undefined>
   >;
 };
 
@@ -22,7 +22,7 @@ export const ChromaSelectMenu = ({
   return (
     <Select
       defaultValue={brewerPalette}
-      onValueChange={(value) => setBrewerPalette(value as BrewerPalette)}
+      onValueChange={(value) => setBrewerPalette(value as BrewerPaletteKey)}
     >
       <SelectTrigger className="w-auto">
         <SelectValue placeholder={brewerPalette || "Select palette"} />

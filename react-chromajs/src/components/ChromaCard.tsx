@@ -11,10 +11,10 @@ import { Button } from "./ui/button";
 import { ChromaSelectMenu } from "./ChromaSelectMenu";
 import { ChromaPaletteBar } from "./ChromaPaletteBar";
 
-export type BrewerPalette = keyof typeof brewer;
+export type BrewerPaletteKey = keyof typeof brewer;
 
 export const ChromaCard = () => {
-  const [brewerPalette, setBrewerPalette] = useState<BrewerPalette | undefined>(
+  const [brewerPalette, setBrewerPalette] = useState<BrewerPaletteKey | undefined>(
     undefined,
   );
 

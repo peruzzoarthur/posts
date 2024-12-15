@@ -1,9 +1,9 @@
 import { brewer } from "chroma-js";
 import { Badge } from "./ui/badge";
-import { BrewerPalette } from "./ChromaCard";
+import { BrewerPaletteKey } from "./ChromaCard";
 
 type ChromaPaletteBarProps = {
-  brewerPalette: BrewerPalette;
+  brewerPalette: BrewerPaletteKey;
 };
 
 export const ChromaPaletteBar = ({ brewerPalette }: ChromaPaletteBarProps) => {
