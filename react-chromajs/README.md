@@ -1,20 +1,20 @@
-### React Chromajs Select Menu
+<!-- ### React Chromajs SelectMenu Card with ShadCN UI Components -->
 
-Finally I've decided to put in practice my blog project and share my work within the community. This is the first post of some series of blog posts I'm going to be sharing in this page for the next times to come.
+I’m excited to announce that I’ve finally decided to put my blog project into action and start sharing my work with the community! This post marks the beginning of a series of blog entries that I’ll be publishing here in the future.
 
-My first series will be about React components I've been building in my projects.
-One of the ideas behind of components is to make them reusable within parts of the same app, and even more than one application. Today, I'm gonna be sharing a select menu for color palette picking, integrating Chroma.js library with shadcn elements and react state.
+My first series will focus on the React components I’ve been building for my projects. One of the core principles of components is reusability—they’re designed to be implemented across various parts of the same app, and even across multiple applications. In today’s post, I’ll share a component I created: a color palette picker built with React, integrating the Chroma.js library with ShadCN UI elements and React state management.
 
-Colors are truly amazing for styling our components. But they are also quite dangerous, in a sense that, harmony between the choosen colors is a very sensitive issue.
+Colors are incredible for styling components, but they can also be tricky to work with. Maintaining harmony between chosen colors is a delicate task. Fortunately, there are many tools available to help with this challenge. Some are built directly into component libraries (such as ShadCN’s straightforward methods for theming and styling), while others come as external libraries and resources.
 
-For that, that are lots of already built in tools, in the components libraries themselves (shadcn has a very straight forward way to colorize their components) and also external projects and libraries.
-Most usually, if I need to get creative with colors, I use [colorhunt](https://colorhunt.co/) to play around with some color styles in my application. But in a recent project, while working with react-leaflet and maps, I came across the need for color palettes consisting of more than the four colored ones colorhunt offers. As I'm a developer and not a designer it was a struggle for me combining more palettes together (cheers out for all designers that make styling much more straightforward for us developers).
+When I need inspiration or ideas for color combinations, I often turn to [Color Hunt](https://colorhunt.co/), a fantastic platform for exploring color styles. However, in a recent project involving [React Leaflet](https://react-leaflet.js.org/) and interactive maps, I found myself needing color palettes with more than the standard four-color schemes offered by Color Hunt. As a developer—not a designer—it can be a real challenge to come up with harmonious color palettes (shoutout to designers for making styling look effortless!).
 
-So, as said before, I needed color palettes with more colors... I did some research and found [Chroma.js](https://www.npmjs.com/package/chroma-js) library. This is an amazing library for working with colors, and have many utility functions within it, for many use cases. If you're interesed in this topic, I think it's worthy taking a look on it's [docs](https://www.vis4.net/Chroma.js/).
+This need for larger, well-balanced color palettes led me to discover the [Chroma.js](https://www.npmjs.com/package/chroma-js) library. Chroma.js is an exceptional library for working with colors, offering a wide range of utility functions for various use cases. If you’re interested in working with colors in your projects, I highly recommend checking out its [documentation](https://www.vis4.net/Chroma.js/).
 
-While taking a read on the documentation, I found `chroma.brewer`, a color palette generator, that uses [ColorBrewer Palettes](https://colorbrewer2.org/), an external service very common for Geographic Information System ([GIS](https://en.wikipedia.org/wiki/Geographic_information_system)) specialists for helping creating maps, and also a perfect fit for my use case (you can check some examples in the end of this post).
+While exploring Chroma.js, I came across <code>chroma.brewer</code>, a feature that generates color palettes using [ColorBrewer palettes](https://colorbrewer2.org/). These palettes are widely used in Geographic Information Systems ([GIS](https://en.wikipedia.org/wiki/Geographic_information_system)) for creating visually appealing and functional maps—making them a perfect fit for my use case (you’ll find some examples at the end of this post).
 
-The code I'll be sharing is a React Typescript project [set up with Vite & shadcn/ui.](https://ui.shadcn.com/docs/installation/vite) which consists of a reusable [Card](https://ui.shadcn.com/docs/components/card) with a [Select](https://ui.shadcn.com/docs/components/select) menu, and a row of [Badges](https://ui.shadcn.com/docs/components/badge) for inspecting the colors of the palette, and saving the array of colors in a react state to be used elsewere.
+The project I’ll be sharing today is a React TypeScript app set up with [Vite and ShadCN UI](https://ui.shadcn.com/docs/installation/vite). It features a reusable [Card](https://ui.shadcn.com/docs/components/card) component containing a [Select](https://ui.shadcn.com/docs/components/select) menu for picking color palettes, along with a row of [Badges](https://ui.shadcn.com/docs/components/badge) for previewing the selected colors. The selected palette is stored in React state, making it easy to use elsewhere in the application.
+
+Stay tuned for more posts in this series, where I’ll dive deeper into React components and share additional insights into my journey in web development!
 
 #### Code
 
@@ -158,16 +158,20 @@ export const ChromaCard = () => {
 };
 ```
 
-Cards are highly flexible UI components used to group related content and actions within a defined container, providing a visually organized and modular design. In the <code>ChromaCard</code> component, the card encapsulates a color palette picker, including a title, description, a dropdown menu (ChromaSelectMenu), and a visual color bar (<code>ChromaPaletteBar</code>). The <code>useState</code> hook is utilized to manage the internal state of the selected color palette (<code>brewerPalette</code>), allowing the component to respond dynamically to user input and re-render when the palette changes.
+Cards are highly flexible UI components used to group related content and actions within a defined container, providing a visually organized and modular design. In the <code>ChromaCard</code> component, the card encapsulates a color palette picker, including a title, description, a dropdown menu (<code>ChromaSelectMenu</code>), and a visual color bar (<code>ChromaPaletteBar</code>). The <code>useState</code> hook is utilized to manage the internal state of the selected color palette (<code>brewerPalette</code>), allowing the component to respond dynamically to user input and re-render when the palette changes.
 
 ![component](component.png)
 Figure 1: Example of the created component with Purple-Blue-Green color palette selected.
 
-The modularity of <code>ChromaCard</code> makes it reusable across various applications. For instance, in my use case of creating a GIS data visualization app, this component can be adapted to manage and display different palettes for styling maps, graphs, or charts.
+The modularity of <code>ChromaCard</code> makes it reusable across various applications. For instance, in my use case of creating a GIS data visualization app, this component can be adapted, for example, to manage and display different palettes for styling maps, graphs, or charts.
 
-- Use case: [cgis](https://cgis.up.railway.app/) styling feature for geojson data.
+#### Use case: [cgis](https://cgis.up.railway.app/) styling feature for GeoJSON data
 
-In order to create a nice way to distinguish colors for different geospatial data in my application, I applied the above detailed component for generating colors to be applied to the loaded geojson files. I'm looking forward to detail this implementation in a next series of posts, explaining more in depth concepts about web GIS and the application I'm developing.
+To create visually distinguishable colors for different geospatial datasets in my application, I utilized the component described above to generate color palettes, which are then applied to loaded GeoJSON files. In the near future, I plan to write a series of posts delving deeper into this implementation, exploring key concepts of web GIS and providing insights into the development process of my application.
 
 ![cgis_use_case](cgis_use_case.png)
 Figure 2: Purple-Blue-Green palette applied to polygons of municipalities of Rio Grande do Sul, Brazil.
+
+#### Summary
+
+This post introduces a React component for selecting and previewing color palettes using the Chroma.js library and ShadCN UI components. The component includes a dropdown menu to select color palettes (leveraging Chroma.js's brewer palettes) and a color bar displaying the selected palette as badges.
