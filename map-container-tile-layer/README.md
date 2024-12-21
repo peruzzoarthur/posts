@@ -1,50 +1,34 @@
-# React + TypeScript + Vite
+<!-- ### React Leaflet MapContainer and Tile Layers -->
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome back! In today's post will be talking about how to use React with [React Leaflet](https://react-leaflet.js.org/) library to handle displaying maps in our applications.
 
-Currently, two official plugins are available:
+The project I’ll be sharing today is a React TypeScript app set up with [Vite and Tailwind CSS](https://ui.shadcn.com/docs/installation/vite). It features a .......
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Stay tuned for more posts in this series, where I’ll dive deeper into React components and share additional insights into my journey in web development!
 
-## Expanding the ESLint configuration
+#### Code
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- First, install Chroma.js and its type definitions
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm install react@rc react-dom@rc leaflet react-leaflet
+npm install -D @types/leaflet
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- Configure leaftlet to display map container properly (import leaflet CSS and set a height and width to the container) 
+```typescript
+import "leaflet/dist/leaflet.css";
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+export type BrewerPaletteKey = keyof typeof brewer;
 ```
+
+#### Use case: [cgis](https://cgis.up.railway.app/) styling feature for GeoJSON data
+
+To create visually distinguishable colors for different geospatial datasets in my application, I utilized the component described above to generate color palettes, which are then applied to loaded GeoJSON files. In the near future, I plan to write a series of posts delving deeper into this implementation, exploring key concepts of web GIS and providing insights into the development process of my application.
+
+![cgis_use_case](cgis_use_case.png)
+Figure 2: Purple-Blue-Green palette applied to polygons of municipalities of Rio Grande do Sul, Brazil.
+
+#### Summary
+
+This post introduces a React component for selecting and previewing color palettes using the Chroma.js library and ShadCN UI components. The component includes a dropdown menu to select color palettes (leveraging Chroma.js's brewer palettes) and a color bar displaying the selected palette as badges.
