@@ -1,34 +1,91 @@
 <!-- ### React Leaflet MapContainer and Tile Layers -->
 
-Welcome back! In today's post will be talking about how to use React with [React Leaflet](https://react-leaflet.js.org/) library to handle displaying maps in our applications.
+Welcome back! In today's post, we’ll discuss how to use React with the [React Leaflet](https://react-leaflet.js.org/) library to display maps in our applications.
 
-The project I’ll be sharing today is a React TypeScript app set up with [Vite and Tailwind CSS](https://ui.shadcn.com/docs/installation/vite). It features a .......
+In React Leaflet, the `<MapContainer>` component is a wrapper that serves as the parent container for the Leaflet map and its child components, such as tile layers, markers, popups, and other overlays. It initializes the Leaflet map instance and manages its lifecycle. For this example, we will use the following `<MapContainer>` props:
+
+- **center**: The initial geographical center of the map (latitude and longitude).
+- **zoom**: The initial zoom level of the map.
+- **style** or **className**: Used to apply styles to the map container (e.g., width and height).
+- **scrollWheelZoom**: Determines whether the user can zoom using the scroll wheel.
+
+On the other hand, the `<TileLayer>` component represents a tile layer, which is a type of map layer used to display map tiles from a specific source, such as OpenStreetMap, Google Maps, or custom tile servers. It is essential for rendering the base map, which provides the visual representation of geographical data. For this example, we will use the following `<TileLayer>` props:
+
+- **url**: The URL template for fetching tiles. The template can include placeholders like `{s}`, `{z}`, `{x}`, and `{y}` for subdomains, zoom level, and tile coordinates.
+- **attribution**: A string containing the attribution text for the map data.
+
+The project I’ll be sharing today is a React TypeScript app set up with [Vite and Tailwind CSS](https://tailwindcss.com/docs/guides/vite). This post will demonstrate how to set up a map container and load different tile layers.
 
 Stay tuned for more posts in this series, where I’ll dive deeper into React components and share additional insights into my journey in web development!
 
-#### Code
+---
 
-- First, install Chroma.js and its type definitions
+#### Code Example
+
+First, let’s install React Leaflet and update React to its latest version (React Leaflet 5.x requires React 18 or later):
 
 ```bash
 npm install react@rc react-dom@rc leaflet react-leaflet
-npm install -D @types/leaflet
+```
+Next, install the Leaflet type definitions:
+
+```bash
+npm install -d @types/leaflet
 ```
 
-- Configure leaftlet to display map container properly (import leaflet CSS and set a height and width to the container) 
+To properly display the <code>MapContainer</code>, we need to import Leaflet’s CSS file and ensure the map container has a specified height and width:
+
 ```typescript
 import "leaflet/dist/leaflet.css";
+import { MapContainer } from "react-leaflet";
 
-export type BrewerPaletteKey = keyof typeof brewer;
+function App() {
+  return (
+    <div className="w-screen h-screen p-12">
+      <MapContainer className="h-full w-full" />
+    </div>
+  );
+}
+
+export default App;
+```
+In the above code, we’ve imported the <code>leaflet.css</code> file and set a size for the container. For demonstration purposes, the <code>div</code> uses Tailwind CSS utility classes to occupy the entire screen (<code>w-screen h-screen</code>) with padding (<code>p-12</code>) for a windowed style. The <code>MapContainer </code> is set to fill the entire <code>div</code> by using the <code>h-full w-full classes</code>. In other use cases, you can customize the container dimensions to suit your specific needs.
+
+Notice that the <code>MapContainer</code> is currently self-closing, but the real power of React Leaflet lies in adding child components to it. Let’s now add a <code>TileLayer</code> to visualize a satellite-based map.
+
+```typescript
+import "leaflet/dist/leaflet.css";
+import { MapContainer, TileLayer } from "react-leaflet";
+
+function App() {
+  return (
+    <div className="w-screen h-screen p-12">
+      <MapContainer center={[0, 0]} zoom={4} className="h-full w-full">
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+      </MapContainer>
+    </div>
+  );
+}
+
+export default App;
 ```
 
-#### Use case: [cgis](https://cgis.up.railway.app/) styling feature for GeoJSON data
+In this example, the <code>TileLayer</code> is used to fetch and display map tiles from OpenStreetMap. The url prop specifies the source for the tiles, while the attribution prop provides proper credit to the map data contributors.
 
-To create visually distinguishable colors for different geospatial datasets in my application, I utilized the component described above to generate color palettes, which are then applied to loaded GeoJSON files. In the near future, I plan to write a series of posts delving deeper into this implementation, exploring key concepts of web GIS and providing insights into the development process of my application.
+With this setup, you’ll have a fully functional map displaying OpenStreetMap tiles. From here, you can further enhance the map by adding additional layers, markers, popups, or other React Leaflet components. Additionally, you can experiment with various tile layer URLs to incorporate different styles or satellite-based imagery into your application.
+
+In my application [cgis](https://cgis.up.railway.app/), for example, I implemented a feature that allows users to switch between three distinct tile styles: dark mode, terrain, and satellite imagery. This flexibility enables the map to adapt to different use cases, whether you're working on night-mode designs, analyzing geographic features, or visualizing high-resolution satellite images.
+
+#### use case: multiple tile layers for map rendering
+
+To create visually distinguishable colors for different geospatial datasets in my application, i utilized the component described above to generate color palettes, which are then applied to loaded geojson files. in the near future, i plan to write a series of posts delving deeper into this implementation, exploring key concepts of web gis and providing insights into the development process of my application.
 
 ![cgis_use_case](cgis_use_case.png)
-Figure 2: Purple-Blue-Green palette applied to polygons of municipalities of Rio Grande do Sul, Brazil.
+figure 2: purple-blue-green palette applied to polygons of municipalities of rio grande do sul, brazil.
 
-#### Summary
+#### summary
 
-This post introduces a React component for selecting and previewing color palettes using the Chroma.js library and ShadCN UI components. The component includes a dropdown menu to select color palettes (leveraging Chroma.js's brewer palettes) and a color bar displaying the selected palette as badges.
+this post introduces a react component for selecting and previewing color palettes using the chroma.js library and shadcn ui components. the component includes a dropdown menu to select color palettes (leveraging chroma.js's brewer palettes) and a color bar displaying the selected palette as badges.
