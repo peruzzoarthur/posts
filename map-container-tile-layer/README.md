@@ -2,7 +2,7 @@
 
 Welcome back! In today's post, we’ll discuss how to use React with the [React Leaflet](https://react-leaflet.js.org/) library to display maps in our applications.
 
-In React Leaflet, the `<MapContainer>` component is a wrapper that serves as the parent container for the Leaflet map and its child components, such as tile layers, markers, popups, and other overlays. It initializes the Leaflet map instance and manages its lifecycle. For this example, we will use the following `<MapContainer>` props:
+In React Leaflet, the `MapContainer` component is a wrapper that serves as the parent container for the Leaflet map and its child components, such as tile layers, markers, popups, and other overlays. It initializes the Leaflet map instance and manages its lifecycle. For this example, we will use the following <code>MapContainer</code> props:
 
 - **center**: The initial geographical center of the map (latitude and longitude).
 - **zoom**: The initial zoom level of the map.
@@ -27,6 +27,7 @@ First, let’s install React Leaflet and update React to its latest version (Rea
 ```bash
 npm install react@rc react-dom@rc leaflet react-leaflet
 ```
+
 Next, install the Leaflet type definitions:
 
 ```bash
@@ -49,7 +50,8 @@ function App() {
 
 export default App;
 ```
-In the above code, we’ve imported the <code>leaflet.css</code> file and set a size for the container. For demonstration purposes, the <code>div</code> uses Tailwind CSS utility classes to occupy the entire screen (<code>w-screen h-screen</code>) with padding (<code>p-12</code>) for a windowed style. The <code>MapContainer </code> is set to fill the entire <code>div</code> by using the <code>h-full w-full classes</code>. In other use cases, you can customize the container dimensions to suit your specific needs.
+
+In the above code, we’ve imported the <code>leaflet.css</code> file and set a size for the container. For demonstration purposes, the <code>div</code> uses Tailwind CSS utility classes to occupy the entire screen (<code>w-screen h-screen</code>) with padding (<code>p-12</code>) for a windowed style. The <code>MapContainer</code> is set to fill the entire <code>div</code> by using the <code>h-full w-full</code> classes. In other use cases, you can customize the container dimensions to suit your specific needs.
 
 Notice that the <code>MapContainer</code> is currently self-closing, but the real power of React Leaflet lies in adding child components to it. Let’s now add a <code>TileLayer</code> to visualize a satellite-based map.
 
@@ -73,19 +75,119 @@ function App() {
 export default App;
 ```
 
-In this example, the <code>TileLayer</code> is used to fetch and display map tiles from OpenStreetMap. The url prop specifies the source for the tiles, while the attribution prop provides proper credit to the map data contributors.
+In this example, the `TileLayer` is used to fetch and display map tiles from OpenStreetMap. The url prop specifies the source for the tiles, while the attribution prop provides proper credit to the map data contributors.
 
-With this setup, you’ll have a fully functional map displaying OpenStreetMap tiles. From here, you can further enhance the map by adding additional layers, markers, popups, or other React Leaflet components. Additionally, you can experiment with various tile layer URLs to incorporate different styles or satellite-based imagery into your application.
+With this setup, you’ll have a fully functional map displaying OpenStreetMap tiles. From here, you can enhance the map further by adding additional layers, markers, popups, or other React Leaflet components—topics we’ll explore in future tutorials. You can also experiment with different tile layer URLs to incorporate unique styles or satellite-based imagery into your application.
 
-In my application [cgis](https://cgis.up.railway.app/), for example, I implemented a feature that allows users to switch between three distinct tile styles: dark mode, terrain, and satellite imagery. This flexibility enables the map to adapt to different use cases, whether you're working on night-mode designs, analyzing geographic features, or visualizing high-resolution satellite images.
+For instance, in my application, [cgis](https://cgis.up.railway.app/) I implemented a feature that allows users to toggle between three distinct tile styles: dark mode, terrain, and satellite imagery. This functionality ensures the map can adapt seamlessly to various use cases, whether you're designing for night-mode environments, analyzing geographic features, or viewing high-resolution satellite imagery.
 
-#### use case: multiple tile layers for map rendering
+#### Use case: `ContextMenu` with multiple `TileLayer` options
 
-To create visually distinguishable colors for different geospatial datasets in my application, i utilized the component described above to generate color palettes, which are then applied to loaded geojson files. in the near future, i plan to write a series of posts delving deeper into this implementation, exploring key concepts of web gis and providing insights into the development process of my application.
+To create visually distinct tile layers, I used a React `useState` hook to store the values for the `attribution` and `url`.
 
-![cgis_use_case](cgis_use_case.png)
-figure 2: purple-blue-green palette applied to polygons of municipalities of rio grande do sul, brazil.
+```typescript
+export type TileLayerOptions = {
+  attribution: string;
+  url: string;
+};
 
-#### summary
+const [tileLayerOptions, setTileLayerOptions] = useState<TileLayerOptions>({
+  attribution:
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+});
+```
 
-this post introduces a react component for selecting and previewing color palettes using the chroma.js library and shadcn ui components. the component includes a dropdown menu to select color palettes (leveraging chroma.js's brewer palettes) and a color bar displaying the selected palette as badges.
+The state setter is provided as a prop to the `ContextMenu` component, enabling users to choose their preferred map style. Although the code includes additional functionality, this explanation will focus on the `ContextMenu`, the state management via the `onSelect` handler, and the `setTileLayerOptions` function.
+
+```typescript
+type TileLayerProps = {
+  featureCollection?: FeatureCollectionWithFilenameAndState;
+  filename: string;
+  setTileLayerOptions: React.Dispatch<TileLayerOptions>;
+};
+
+export const TileLayer = ({
+  featureCollection,
+  filename,
+  setTileLayerOptions,
+}: TileLayerProps) => {
+
+  return (
+    <div className="flex w-full items-center space-x-1 cursor-pointer">
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <div className="flex space-x-1 hover:bg-white hover:bg-opacity-0">
+            <p className="text-sm">{filename}</p>
+            <Map />
+          </div>
+        </ContextMenuTrigger>
+        <ContextMenuContent className="z-[1000]">
+          <ContextMenuItem
+            onSelect={() => {
+              setTileLayerOptions({
+                attribution:
+                  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                url: " https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+              });
+            }}
+          >
+            Dark
+          </ContextMenuItem>
+          <ContextMenuItem
+            onSelect={() => {
+              setTileLayerOptions({
+                attribution:
+                  "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+                url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+              });
+            }}
+          >
+            Satellite
+          </ContextMenuItem>
+
+          <ContextMenuItem
+            onSelect={() => {
+              setTileLayerOptions({
+                attribution:
+                  "Tiles &copy; Esri &mdash; Source: USGS, NOAA",
+                url: "https://server.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
+              });
+            }}
+          >
+           Terrain
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
+    </div>
+  );
+};
+```
+
+In this code block, the `onSelect` handler is used within each `ContextMenuItem` to update the map's tile layer dynamically. When a user selects a menu item (e.g., "Dark," "Satellite," or "Terrain"), the `onSelect` function is triggered, executing the `setTileLayerOptions` function with a specific configuration object.
+
+This approach allows the map's tile layer to update dynamically based on the user's selection, providing a seamless and interactive user experience.
+
+![dark_tile](dark_tile.png)
+Figure 1: Dark styled cartography.
+
+![satellite_tile](satellite_tile.png)
+Figure 1: Satellite image.
+
+![terrain_tile](terrain_tile.png)
+Figure 1: Terrain cartography.
+
+Check out the video to see this feature in action within the app! Feel free to explore [cgis](https://cgis.up.railway.app/) and share your thoughts with me. I’d love to hear your feedback and gain insights from the community's perspective on my project.
+
+<div class="video-container">
+    <iframe 
+        src="https://www.youtube.com/embed/46BPHtynJak"
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+    </iframe>
+</div>
+
+#### Summary
+
+In this post we explored the most basic component for React Leaflet, the MapContainer. Also we learned how to use TileLayer to style the container images from different sources.
