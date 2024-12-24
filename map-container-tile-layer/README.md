@@ -2,19 +2,19 @@
 
 Welcome back! In today's post, we’ll discuss how to use React with the [React Leaflet](https://react-leaflet.js.org/) library to display maps in our applications.
 
-In React Leaflet, the `MapContainer` component is a wrapper that serves as the parent container for the Leaflet map and its child components, such as tile layers, markers, popups, and other overlays. It initializes the Leaflet map instance and manages its lifecycle. For this example, we will use the following <code>MapContainer</code> props:
+In React Leaflet, the `MapContainer` component is a wrapper that serves as the parent container for the Leaflet map and its child components, such as tile layers, markers, popups, and other overlays. It initializes the Leaflet map instance and manages its lifecycle. For this example, we will use the following `MapContainer` props:
 
 - **center**: The initial geographical center of the map (latitude and longitude).
 - **zoom**: The initial zoom level of the map.
 - **style** or **className**: Used to apply styles to the map container (e.g., width and height).
 - **scrollWheelZoom**: Determines whether the user can zoom using the scroll wheel.
 
-On the other hand, the `<TileLayer>` component represents a tile layer, which is a type of map layer used to display map tiles from a specific source, such as OpenStreetMap, Google Maps, or custom tile servers. It is essential for rendering the base map, which provides the visual representation of geographical data. For this example, we will use the following `<TileLayer>` props:
+On the other hand, the `TileLayer` component represents a tile layer, which is a type of map layer used to display map tiles from a specific source, such as OpenStreetMap, Google Maps, or custom tile servers. It is essential for rendering the base map, which provides the visual representation of geographical data. For this example, we will use the following `TileLayer` props:
 
 - **url**: The URL template for fetching tiles. The template can include placeholders like `{s}`, `{z}`, `{x}`, and `{y}` for subdomains, zoom level, and tile coordinates.
 - **attribution**: A string containing the attribution text for the map data.
 
-The project I’ll be sharing today is a React TypeScript app set up with [Vite and Tailwind CSS](https://tailwindcss.com/docs/guides/vite). This post will demonstrate how to set up a map container and load different tile layers.
+The [project](https://github.com/peruzzoarthur/posts/tree/master/map-container-tile-layer) I’ll be sharing today is a React TypeScript app set up with [Vite and Tailwind CSS](https://tailwindcss.com/docs/guides/vite). This post will demonstrate how to set up a map container and load different tile layers.
 
 Stay tuned for more posts in this series, where I’ll dive deeper into React components and share additional insights into my journey in web development!
 
@@ -22,10 +22,11 @@ Stay tuned for more posts in this series, where I’ll dive deeper into React co
 
 #### Code Example
 
-First, let’s install React Leaflet and update React to its latest version (React Leaflet 5.x requires React 18 or later):
+First, let’s install React Leaflet and update React to its latest version (React Leaflet 5.x requires React 19):
 
 ```bash
-npm install react@rc react-dom@rc leaflet react-leaflet
+npm install react@rc react-dom@rc leaflet
+npm install react-leaflet@next
 ```
 
 Next, install the Leaflet type definitions:
@@ -34,7 +35,7 @@ Next, install the Leaflet type definitions:
 npm install -d @types/leaflet
 ```
 
-To properly display the <code>MapContainer</code>, we need to import Leaflet’s CSS file and ensure the map container has a specified height and width:
+To properly display the `MapContainer`, we need to import Leaflet’s CSS file and ensure the map container has a specified height and width:
 
 ```typescript
 import "leaflet/dist/leaflet.css";
@@ -51,9 +52,9 @@ function App() {
 export default App;
 ```
 
-In the above code, we’ve imported the <code>leaflet.css</code> file and set a size for the container. For demonstration purposes, the <code>div</code> uses Tailwind CSS utility classes to occupy the entire screen (<code>w-screen h-screen</code>) with padding (<code>p-12</code>) for a windowed style. The <code>MapContainer</code> is set to fill the entire <code>div</code> by using the <code>h-full w-full</code> classes. In other use cases, you can customize the container dimensions to suit your specific needs.
+In the above code, we’ve imported the `leaflet.css` file and set a size for the container. For demonstration purposes, the `div` uses Tailwind CSS utility classes to occupy the entire screen (`w-screen h-screen`) with padding (`p-12`) for a windowed style. The `MapContainer` is set to fill the entire `div` by using the `h-full w-full` classes. In other use cases, you can customize the container dimensions to suit your specific needs.
 
-Notice that the <code>MapContainer</code> is currently self-closing, but the real power of React Leaflet lies in adding child components to it. Let’s now add a <code>TileLayer</code> to visualize a satellite-based map.
+Notice that the `MapContainer` is currently self-closing, but the real power of React Leaflet lies in adding child components to it. Let’s now add a `TileLayer` to visualize an OpenStreetMap based map.
 
 ```typescript
 import "leaflet/dist/leaflet.css";
@@ -79,7 +80,7 @@ In this example, the `TileLayer` is used to fetch and display map tiles from Ope
 
 With this setup, you’ll have a fully functional map displaying OpenStreetMap tiles. From here, you can enhance the map further by adding additional layers, markers, popups, or other React Leaflet components—topics we’ll explore in future tutorials. You can also experiment with different tile layer URLs to incorporate unique styles or satellite-based imagery into your application.
 
-For instance, in my application, [cgis](https://cgis.up.railway.app/) I implemented a feature that allows users to toggle between three distinct tile styles: dark mode, terrain, and satellite imagery. This functionality ensures the map can adapt seamlessly to various use cases, whether you're designing for night-mode environments, analyzing geographic features, or viewing high-resolution satellite imagery.
+For instance, in my application, [cgis](https://cgis.up.railway.app/) I implemented a feature that allows users to toggle between distinct tile styles: dark mode, terrain, and satellite imagery. While these are the current options, more styles will be added as the project is still under construction. This functionality ensures the map can adapt seamlessly to various use cases, whether you're designing for night-mode environments, analyzing geographic features, or viewing high-resolution satellite imagery.
 
 #### Use case: `ContextMenu` with multiple `TileLayer` options
 
@@ -145,7 +146,6 @@ export const TileLayer = ({
           >
             Satellite
           </ContextMenuItem>
-
           <ContextMenuItem
             onSelect={() => {
               setTileLayerOptions({
@@ -190,4 +190,4 @@ Check out the video to see this feature in action within the app! Feel free to e
 
 #### Summary
 
-In this post we explored the most basic component for React Leaflet, the MapContainer. Also we learned how to use TileLayer to style the container images from different sources.
+In this post, we explored the foundational component of React Leaflet, the MapContainer, and demonstrated how to use the TileLayer component to customize map styles with imagery from various sources. This serves as a solid starting point for creating more advanced and interactive mapping features, which we’ll cover in the upcoming tutorials in this series.
